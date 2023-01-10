@@ -1,0 +1,18 @@
+.text{
+    text-align: center;
+}
+
+.box{
+    width: 70%;
+    border: 2px solid ;
+    border-radius: 10px;
+    height: 40px;
+}
+
+button{
+    margin-top: 10px;
+}
+
+.mt10{
+    margin-top: 10px
+}

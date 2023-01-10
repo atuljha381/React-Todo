@@ -1,13 +1,8 @@
-import Landing from './Components/Landing';
-import Footer from './Components/Footer'
-import Navbar from './Components/Layout/Navbar';
+import TodoWriter from "./Component/TodoWriter";
 function App() {
   return (
     <>
-      <Navbar />
-      <Landing />
-
-      <Footer />
+      <TodoWriter />
     </>
   );
 }
