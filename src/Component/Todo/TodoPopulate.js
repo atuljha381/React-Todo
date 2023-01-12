@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react'
 // eslint-disable-next-line
 import { addTodoHandler } from '../TodoWriter'
-
-function updateTodoHandler(tododata) {
+//NLZSbECMSosC94f8Kdf
+function updateTodoHandler(tododata, id) {
     fetch(
-        "https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata.json/",
+        `https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata/${id}.json/`,
         {
-            mode: 'no-cors',
             method: 'PUT',
             body: JSON.stringify(tododata),
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Methods': 'POST, PUT, GET, OPTIONS'
+                // 'Access-Control-Allow-Methods': 'POST, PUT, GET, OPTIONS'
             }
+        }
+    )
+}
+
+function deleteHttp(tododata,id) {
+    fetch(
+        `https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata/${id}.json/`,
+        {
+            method: 'DELETE',
+            body: JSON.stringify(tododata,id),
         }
     )
 }
@@ -58,18 +67,33 @@ export default function TodoPopulate(props) {
         setTodo(prev => 
             prev.map(item => {
                 if (item.id === id) {
-                    if (tododata[index].status === 'pending') {
+                    if (item.status === 'pending') {
                         item.status = 'done'
                     }
                     else {
                         item.status = 'pending'
                     }
-                    updateTodoHandler(tododata[index])
+                    updateTodoHandler(item, id)
                 }
                 return item
             })
         )
     }
+
+    function deleteHandler(id){
+        setTodo(prev =>
+            prev.map(item => {
+                if (item.id === id) {
+                    console.log('delete if running')
+                    deleteHttp(item, id)
+                    
+
+                }
+                return item
+            })
+        )
+    }
+    
 
     if (isLoaded) {
         return (
@@ -83,7 +107,6 @@ export default function TodoPopulate(props) {
 
     return (
         <>
-            {console.log('atul', tododata)}
             {tododata?.map((data, index) => (
                 <tbody key={index}>
                     <tr>
@@ -91,7 +114,7 @@ export default function TodoPopulate(props) {
                         <td>{data.work}</td>
                         <td>{data.status}</td>
                         <td><button className='btn btn-success' type='button' onClick={() => toggleHandler(data.id, index)}>Toggle</button></td>
-                        <td><button className='btn btn-danger' type='button'>Delete</button></td>
+                        <td><button className='btn btn-danger' onClick={() => deleteHandler(data.id,index)}>Delete</button></td>
                     </tr>
                 </tbody>
             ))
