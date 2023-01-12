@@ -1,22 +1,27 @@
 import React from 'react'
-import classes from './TodoWriter.module.css'
-import TodoTable from './Todo/TodoTable'
-export default function TodoWriter() {
+
+import TodoSubmitter from './Todo/TodoSubmitter'
+export function addTodoHandler(tododata) {
+    fetch(
+        "https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata.json",
+        {
+            mode: 'no-cors',
+            method: 'POST',
+            body: JSON.stringify(tododata),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    )
+}
+
+
+export default function TodoWriter(props) {
+
     return (
-        <>
-            <section className={classes.text}>
-                <form >
-                    <div className='form-group container'>
-                        <h1>TODO LIST!</h1>
-                        <input type="text" className="form-control" />
-                        <button type="button" class="btn btn-primary btn-lg w-100">Add</button>
-                    </div>
-                </form>
-            </section>
-            <section className={classes.mt10}>
-                <TodoTable />
-            </section>
-        </>
+        <section>
+            <TodoSubmitter onAddTodo={addTodoHandler} />
+        </section>
 
     )
 }
