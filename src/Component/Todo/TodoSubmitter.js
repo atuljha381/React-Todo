@@ -14,7 +14,7 @@ export default function TodoSubmitter(props) {
             status: 'pending'
         }
         
-        console.log('Post todo data',todoData)
+        // console.log('Post todo data',todoData)
         props.onAddTodo(todoData)
     }
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { addTodoHandler } from '../TodoWriter'
 //NLZSbECMSosC94f8Kdf
 function updateTodoHandler(tododata, id) {
-    fetch(
+    return fetch(
         `https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata/${id}.json/`,
         {
             method: 'PUT',
@@ -16,12 +16,12 @@ function updateTodoHandler(tododata, id) {
     )
 }
 
-function deleteHttp(tododata,id) {
-    fetch(
+function deleteHttp(id) {
+    return fetch(
         `https://react-todo-app-439d1-default-rtdb.firebaseio.com/todosdata/${id}.json/`,
         {
             method: 'DELETE',
-            body: JSON.stringify(tododata,id),
+            // body: JSON.stringify(tododata,id),
         }
     )
 }
@@ -63,8 +63,8 @@ export default function TodoPopulate(props) {
 
 
 
-    function toggleHandler(id, index) {
-        setTodo(prev => 
+    function toggleHandler(id) {
+        setTodo(prev =>
             prev.map(item => {
                 if (item.id === id) {
                     if (item.status === 'pending') {
@@ -80,20 +80,27 @@ export default function TodoPopulate(props) {
         )
     }
 
-    function deleteHandler(id){
-        setTodo(prev =>
-            prev.map(item => {
-                if (item.id === id) {
-                    console.log('delete if running')
-                    deleteHttp(item, id)
-                    
-
+    function deleteHandler(id) {
+        deleteHttp(id).then(
+            response => {
+                console.log(response)
+                if (response.status === 200) {
+                    setTodo(prev => prev.filter(item => item.id !== id))
                 }
-                return item
-            })
-        )
+            }
+        ).catch(error => console.error(error))
+
+        // setTodo(prev =>
+        //     prev.map(item => {
+        //         if (item.id === id) {
+        //             console.log('delete if running')
+        //             deleteHttp(item, id)
+        //         }
+        //         return item
+        //     })
+        // )
     }
-    
+
 
     if (isLoaded) {
         return (
@@ -113,8 +120,8 @@ export default function TodoPopulate(props) {
                         <td>{data.id}</td>
                         <td>{data.work}</td>
                         <td>{data.status}</td>
-                        <td><button className='btn btn-success' type='button' onClick={() => toggleHandler(data.id, index)}>Toggle</button></td>
-                        <td><button className='btn btn-danger' onClick={() => deleteHandler(data.id,index)}>Delete</button></td>
+                        <td><button className='btn btn-success' type='button' onClick={() => toggleHandler(data.id)}>Toggle</button></td>
+                        <td><button className='btn btn-danger' onClick={() => deleteHandler(data.id)}>Delete</button></td>
                     </tr>
                 </tbody>
             ))
